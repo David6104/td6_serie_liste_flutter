@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'router.dart';
+import 'providers/serie_provider.dart';
 
 // TODO étape 3 : importer SerieProvider
 // TODO étape 5 : importer FavorisProvider
@@ -18,7 +19,7 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        // TODO étape 3 : ChangeNotifierProvider(create: (_) => SerieProvider()),
+        ChangeNotifierProvider(create: (_) => SerieProvider()),
         // TODO étape 5 : ChangeNotifierProvider(create: (_) => FavorisProvider()),
         // TODO étape 8 : ChangeNotifierProvider(create: (_) => WatchlistProvider()),
       ],
