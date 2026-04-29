@@ -5,6 +5,7 @@ import '../providers/serie_provider.dart';
 
 class SerieListScreen extends StatefulWidget {
   const SerieListScreen({super.key});
+
   @override
   State<SerieListScreen> createState() => _SerieListScreenState();
 }

@@ -24,17 +24,15 @@ void main() {
 
     tearDown(() async => dbService.close());
 
-    // Helper : crée un provider qui utilise notre base de test
-    WatchlistProvider makeProvider() =>
-        WatchlistProvider(dbService: dbService);
+    WatchlistProvider makeProvider() => WatchlistProvider(dbService: dbService);
 
     test('démarre avec une watchlist vide', () async {
       final provider = makeProvider();
       await Future.delayed(const Duration(milliseconds: 50));
 
-      // TODO : vérifier que provider.items est vide
-      // TODO : vérifier que provider.itemCount vaut 0
-      // TODO : vérifier que provider.isLoading est false
+      expect(provider.items, isEmpty);
+      expect(provider.itemCount, 0);
+      expect(provider.isLoading, isFalse);
     });
 
     test('ajouterASerie ajoute une série à la watchlist', () async {
@@ -43,9 +41,9 @@ void main() {
 
       await provider.ajouterASerie(testSerie1);
 
-      // TODO : vérifier que provider.items contient 1 élément
-      // TODO : vérifier que le nom de la première série est 'Breaking Bad'
-      // TODO : vérifier que le statut est StatutVisionnage.aVoir
+      expect(provider.items.length, 1);
+      expect(provider.items[0].serie.nom, 'Breaking Bad');
+      expect(provider.items[0].statut, StatutVisionnage.aVoir);
     });
 
     test('ajouterASerie ne duplique pas une série déjà présente', () async {
@@ -55,7 +53,7 @@ void main() {
       await provider.ajouterASerie(testSerie1);
       await provider.ajouterASerie(testSerie1); // doublon ignoré
 
-      // TODO : vérifier que provider.items contient toujours 1 élément
+      expect(provider.items.length, 1);
     });
 
     test('retirerSerie supprime la série de la watchlist', () async {
@@ -66,8 +64,8 @@ void main() {
 
       await provider.retirerSerie(testSerie1.id);
 
-      // TODO : vérifier que provider.items contient 1 élément
-      // TODO : vérifier que la série restante est 'Stranger Things'
+      expect(provider.items.length, 1);
+      expect(provider.items[0].serie.nom, 'Stranger Things');
     });
 
     test('changerStatut met à jour le statut', () async {
@@ -77,7 +75,7 @@ void main() {
 
       await provider.changerStatut(testSerie1.id, StatutVisionnage.enCours);
 
-      // TODO : vérifier que provider.getStatut(testSerie1.id) vaut StatutVisionnage.enCours
+      expect(provider.getStatut(testSerie1.id), StatutVisionnage.enCours);
     });
 
     test('estDansWatchlist retourne vrai si la série est présente', () async {
@@ -85,22 +83,21 @@ void main() {
       await Future.delayed(const Duration(milliseconds: 50));
       await provider.ajouterASerie(testSerie1);
 
-      // TODO : vérifier que provider.estDansWatchlist(testSerie1.id) est true
-      // TODO : vérifier que provider.estDansWatchlist(testSerie2.id) est false
+      expect(provider.estDansWatchlist(testSerie1.id), isTrue);
+      expect(provider.estDansWatchlist(testSerie2.id), isFalse);
     });
 
-    test('persistance : les données survivent à une nouvelle instance', () async {
-      // Première instance — ajoute une série
+    test('persistance : les données survivent à une nouvelle instance',
+        () async {
       final provider1 = makeProvider();
       await Future.delayed(const Duration(milliseconds: 50));
       await provider1.ajouterASerie(testSerie1);
 
-      // Deuxième instance — même dbService, données rechargées depuis SQLite
       final provider2 = WatchlistProvider(dbService: dbService);
       await Future.delayed(const Duration(milliseconds: 50));
 
-      // TODO : vérifier que provider2.items contient 1 élément
-      // TODO : vérifier que le nom de la série est 'Breaking Bad'
+      expect(provider2.items.length, 1);
+      expect(provider2.items[0].serie.nom, 'Breaking Bad');
     });
 
     test('notifie les listeners à chaque modification', () async {
@@ -113,7 +110,7 @@ void main() {
       await provider.changerStatut(testSerie1.id, StatutVisionnage.enCours);
       await provider.retirerSerie(testSerie1.id);
 
-      // TODO : vérifier que count vaut 3 (un notifyListeners par opération)
+      expect(count, 3);
     });
   });
 }

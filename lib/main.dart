@@ -2,12 +2,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+
 import 'router.dart';
 import 'providers/serie_provider.dart';
-
-// TODO étape 3 : importer SerieProvider
-// TODO étape 5 : importer FavorisProvider
-// TODO étape 8 : importer WatchlistProvider
+import 'providers/favoris_provider.dart';
+import 'providers/watchlist_provider.dart';
 
 void main() {
   // Initialisation SQLite nécessaire sur desktop (macOS, Windows, Linux)
@@ -20,8 +19,8 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => SerieProvider()),
-        // TODO étape 5 : ChangeNotifierProvider(create: (_) => FavorisProvider()),
-        // TODO étape 8 : ChangeNotifierProvider(create: (_) => WatchlistProvider()),
+        ChangeNotifierProvider(create: (_) => FavorisProvider()),
+        ChangeNotifierProvider(create: (_) => WatchlistProvider()),
       ],
       child: const MyApp(),
     ),
